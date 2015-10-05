@@ -64,9 +64,14 @@
     this.keydownHandler = function (input) {
       return function ($event) {
         var currentOption = input.dropdown.currentOption;
-        if (currentOption && $event.keyCode === 13) {
+        var allowFreeText = input.freeText;
+        var enterAction = input.enterAction;
+        if ($event.keyCode === 13 && ((currentOption && !allowFreeText) || allowFreeText)) {
           // Enter
           input.dropdown.disableClick = false;
+          if (enterAction) {
+            enterAction();
+          }
         }
       };
     };
@@ -98,6 +103,8 @@
         url: '=suggestionUrl',
         params: '=suggestionParams',
         dropdown: '=suggestionDropdown',
+        freeText: '=suggestionFreeText',
+        enterAction: '=suggestionEnterAction',
         responseProperty: '@?suggestionResponseProperty'
       },
       link: function link($scope, $element) {
